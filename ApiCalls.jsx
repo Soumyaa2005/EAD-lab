@@ -1,28 +1,35 @@
 import React, { useState, useEffect } from "react";
 
 const ApiCalls = () => {
+  const [print, setPrint] = useState([]);
   const URL = "https://jsonplaceholder.typicode.com/users";
 
-  const [users, setUsers] = useState([]);
-
-  const ApiCall = (apiURL) => {
-    fetch(apiURL)
-      .then((res) => res.json())
-      .then((data) => setUsers(data));
-  };
-
   useEffect(() => {
-    ApiCall(URL);
+    const getData = async () => {
+      try {
+        const response = await fetch(URL);
+        const data = await response.json();
+        console.log(data);
+        setPrint(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    getData();
   }, []);
 
   return (
     <div>
-      <h1>Welcome to CBIT</h1>
-      <ul>
-        {users.map((user) => (
-          <li key={user.id}>{user.name}</li>
-        ))}
-      </ul>
+      <h1>API Calls</h1>
+      {print.map((eachItem) => (
+        <div key={eachItem.id}>
+          <h2>{eachItem.name}</h2>
+          <h3>{eachItem.email}</h3>
+          <h4>{eachItem.phone}</h4>
+          <h4>{eachItem.address.street}</h4>        
+        </div>
+      ))}
     </div>
   );
 };
